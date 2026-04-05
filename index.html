@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Para ti ❤️</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0b141a;
+  color: white;
+  overflow-x: hidden;
+}
+
+/* INICIO */
+#inicio {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background: black;
+}
+
+button {
+  padding: 15px 30px;
+  font-size: 18px;
+  border-radius: 10px;
+  border: none;
+  background: #ff4d6d;
+  color: white;
+  cursor: pointer;
+}
+
+/* CHAT */
+#chat {
+  display: none;
+  padding: 20px;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.mensaje {
+  max-width: 60%;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 10px;
+}
+
+.enviado {
+  background: #005c4b;
+  margin-left: auto;
+}
+
+.recibido {
+  background: #202c33;
+}
+
+/* CARTA */
+#carta {
+  display: none;
+  padding: 30px;
+  text-align: center;
+}
+
+#textoCarta {
+  font-size: 20px;
+  max-width: 600px;
+  margin: auto;
+}
+
+/* SORPRESA */
+#sorpresa {
+  display: none;
+  text-align: center;
+  padding: 50px;
+}
+
+/* CORAZONES */
+.corazon {
+  position: fixed;
+  color: red;
+  animation: flotar 5s linear infinite;
+}
+
+@keyframes flotar {
+  from { transform: translateY(100vh); }
+  to { transform: translateY(-10vh); }
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- INICIO -->
+<div id="inicio">
+  <h1>Tengo algo especial para ti ❤️</h1>
+  <button onclick="iniciar()">Entrar</button>
+</div>
+
+<!-- CHAT -->
+<div id="chat"></div>
+
+<!-- CARTA -->
+<div id="carta">
+  <h2>💌 Una carta para ti</h2>
+  <p id="textoCarta"></p>
+</div>
+
+<!-- SORPRESA -->
+<div id="sorpresa">
+  <h1>🎁 Sorpresa</h1>
+  <p>Eres lo mejor que me ha pasado ❤️</p>
+</div>
+
+<script>
+function iniciar() {
+  document.getElementById("inicio").style.display = "none";
+  document.getElementById("chat").style.display = "block";
+  mostrarMensajes();
+}
+
+/* CHAT */
+const mensajes = [
+  { texto: "Hola...", tipo: "recibido" },
+  { texto: "Hoy es un día especial 🎂", tipo: "recibido" },
+  { texto: "Quería hacer algo diferente...", tipo: "recibido" },
+  { texto: "Así que hice esto para ti ❤️", tipo: "enviado" },
+  { texto: "Porque eres muy importante para mí", tipo: "enviado" },
+  { texto: "Feliz cumpleaños 🎉", tipo: "enviado" }
+];
+
+function mostrarMensajes() {
+  let i = 0;
+
+  function siguiente() {
+    if (i < mensajes.length) {
+      let msg = document.createElement("div");
+      msg.classList.add("mensaje", mensajes[i].tipo);
+      msg.innerText = mensajes[i].texto;
+
+      document.getElementById("chat").appendChild(msg);
+      document.getElementById("chat").scrollTop = document.getElementById("chat").scrollHeight;
+
+      i++;
+      setTimeout(siguiente, 1500);
+    } else {
+      setTimeout(mostrarCarta, 2000);
+    }
+  }
+
+  siguiente();
+}
+
+/* CARTA */
+const texto = "Quería decirte que te amo muchísimo ❤️, eres alguien demasiado especial para mí y me hace feliz tenerte en mi vida. Espero que este detalle te haga sonreír.";
+
+let i = 0;
+function mostrarCarta() {
+  document.getElementById("chat").style.display = "none";
+  document.getElementById("carta").style.display = "block";
+
+  function escribir() {
+    if (i < texto.length) {
+      document.getElementById("textoCarta").innerHTML += texto.charAt(i);
+      i++;
+      setTimeout(escribir, 50);
+    } else {
+      setTimeout(mostrarBotonSorpresa, 2000);
+    }
+  }
+
+  escribir();
+}
+
+/* BOTÓN SORPRESA */
+function mostrarBotonSorpresa() {
+  let btn = document.createElement("button");
+  btn.innerText = "Ver sorpresa 🎁";
+  btn.onclick = mostrarSorpresa;
+  document.getElementById("carta").appendChild(btn);
+}
+
+/* SORPRESA */
+function mostrarSorpresa() {
+  document.getElementById("carta").style.display = "none";
+  document.getElementById("sorpresa").style.display = "block";
+}
+
+/* CORAZONES */
+setInterval(() => {
+  let corazon = document.createElement("div");
+  corazon.className = "corazon";
+  corazon.style.left = Math.random() * 100 + "vw";
+  corazon.innerText = "❤️";
+  document.body.appendChild(corazon);
+
+  setTimeout(() => corazon.remove(), 5000);
+}, 300);
+</script>
+
+</body>
+</html>
