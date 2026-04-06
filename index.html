@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Chat para ti ❤️</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0b141a;
+  color: white;
+}
+
+/* INICIO */
+#inicio {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background: black;
+}
+
+button {
+  padding: 15px 30px;
+  font-size: 18px;
+  border-radius: 10px;
+  border: none;
+  background: #ff4d6d;
+  color: white;
+  cursor: pointer;
+}
+
+/* CHAT */
+#chatContainer {
+  display: none;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#chat {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+}
+
+.mensaje {
+  max-width: 60%;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 10px;
+}
+
+.enviado {
+  background: #005c4b;
+  margin-left: auto;
+}
+
+.recibido {
+  background: #202c33;
+}
+
+/* INPUT */
+#inputArea {
+  display: flex;
+  padding: 10px;
+  background: #202c33;
+}
+
+#inputMensaje {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+}
+
+#btnEnviar {
+  margin-left: 10px;
+}
+
+/* CARTA */
+#carta {
+  display: none;
+  text-align: center;
+  padding: 40px;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- INICIO -->
+<div id="inicio">
+  <h1>Tengo algo para ti ❤️</h1>
+  <button onclick="iniciar()">Entrar</button>
+</div>
+
+<!-- CHAT -->
+<div id="chatContainer">
+  <div id="chat"></div>
+
+  <div id="inputArea">
+    <input type="text" id="inputMensaje" placeholder="Escribe un mensaje...">
+    <button id="btnEnviar" onclick="enviarMensaje()">Enviar</button>
+  </div>
+</div>
+
+<!-- REGALO -->
+<div id="carta">
+  <h2>🎁 Tu regalo</h2>
+  <p>Daniel quería recordarte lo importante que eres para él ❤️</p>
+</div>
+
+<script>
+let paso = 0;
+let intentosNo = 0;
+
+function iniciar() {
+  document.getElementById("inicio").style.display = "none";
+  document.getElementById("chatContainer").style.display = "flex";
+
+  setTimeout(() => mensajeBot("Hola..."), 1000);
+}
+
+function mensajeBot(texto) {
+  let msg = document.createElement("div");
+  msg.classList.add("mensaje", "recibido");
+  msg.innerText = texto;
+  document.getElementById("chat").appendChild(msg);
+  scroll();
+}
+
+function mensajeUsuario(texto) {
+  let msg = document.createElement("div");
+  msg.classList.add("mensaje", "enviado");
+  msg.innerText = texto;
+  document.getElementById("chat").appendChild(msg);
+  scroll();
+}
+
+function scroll() {
+  let chat = document.getElementById("chat");
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function enviarMensaje() {
+  let input = document.getElementById("inputMensaje");
+  let texto = input.value.toLowerCase().trim();
+
+  if (texto === "") return;
+
+  mensajeUsuario(input.value);
+  input.value = "";
+
+  setTimeout(() => responder(texto), 1000);
+}
+
+function responder(texto) {
+
+  // PASO 0: después del hola
+  if (paso === 0) {
+    mensajeBot("Hola 😊");
+    mensajeBot("Me presento...");
+    mensajeBot("Soy un bot 🤖");
+    mensajeBot("Y vengo de parte de mi creador...");
+    mensajeBot("Daniel ❤️");
+    mensajeBot("Él quiere darte un pequeño detalle...");
+    mensajeBot("¿Te gustaría verlo?");
+    paso = 1;
+    return;
+  }
+
+  // PASO 1: decisión
+  if (paso === 1) {
+
+    if (texto.includes("si") || texto.includes("sí")) {
+      mensajeBot("Sabía que dirías que sí 😏");
+      mensajeBot("Prepárate...");
+      setTimeout(mostrarRegalo, 2000);
+      paso = 2;
+      return;
+    }
+
+    if (texto.includes("no")) {
+      intentosNo++;
+
+      if (intentosNo === 1) {
+        mensajeBot("😢 oye...");
+        mensajeBot("dale una oportunidad...");
+      } else if (intentosNo === 2) {
+        mensajeBot("porfa 🥺");
+        mensajeBot("me esforcé mucho...");
+      } else if (intentosNo === 3) {
+        mensajeBot("es de parte de Daniel...");
+        mensajeBot("seguro te va a gustar ❤️");
+      } else {
+        mensajeBot("yaaaa 😭 solo di que sí jajaja");
+      }
+
+      return;
+    }
+
+    // si escribe otra cosa
+    mensajeBot("solo tienes que decir 'sí' o 'no' 😜");
+  }
+}
+
+function mostrarRegalo() {
+  document.getElementById("chatContainer").style.display = "none";
+  document.getElementById("carta").style.display = "block";
+}
+</script>
+
+</body>
+</html>
