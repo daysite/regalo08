@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Chat especial ❤️</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0b141a;
+}
+
+/* INICIO */
+#inicio {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background: black;
+  color: white;
+}
+
+button {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 10px;
+  background: #25d366;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* CHAT */
+#chatContainer {
+  display: none;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* HEADER */
+#header {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background: #202c33;
+  color: white;
+}
+
+#header img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+/* MENSAJES */
+#chat {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.mensaje {
+  max-width: 65%;
+  padding: 8px;
+  margin: 5px;
+  border-radius: 8px;
+  font-size: 14px;
+  position: relative;
+}
+
+.enviado {
+  background: #005c4b;
+  margin-left: auto;
+}
+
+.recibido {
+  background: #202c33;
+}
+
+/* HORA */
+.hora {
+  font-size: 10px;
+  opacity: 0.7;
+  margin-top: 3px;
+  text-align: right;
+}
+
+/* CHECK */
+.check {
+  font-size: 10px;
+  margin-left: 5px;
+}
+
+/* INPUT */
+#inputArea {
+  display: flex;
+  padding: 10px;
+  background: #202c33;
+}
+
+#inputMensaje {
+  flex: 1;
+  padding: 10px;
+  border-radius: 20px;
+  border: none;
+}
+
+#btnEnviar {
+  margin-left: 10px;
+}
+
+/* ESCRIBIENDO */
+#typing {
+  font-size: 12px;
+  color: #ccc;
+  padding: 5px 15px;
+}
+
+/* CARTA */
+#carta {
+  display: none;
+  text-align: center;
+  padding: 40px;
+  color: white;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- INICIO -->
+<div id="inicio">
+  <h1>Tengo algo para ti ❤️</h1>
+  <button onclick="iniciar()">Entrar</button>
+</div>
+
+<!-- CHAT -->
+<div id="chatContainer">
+
+  <!-- HEADER -->
+  <div id="header">
+    <img src="perfil.jpeg">
+    <div>
+      <strong>Bot de Daniel ❤️</strong><br>
+      <small>en línea</small>
+    </div>
+  </div>
+
+  <div id="chat"></div>
+  <div id="typing"></div>
+
+  <div id="inputArea">
+    <input type="text" id="inputMensaje" placeholder="Escribe un mensaje...">
+    <button onclick="enviarMensaje()">Enviar</button>
+  </div>
+</div>
+
+<!-- REGALO -->
+<div id="carta">
+  <h2>🎁 Tu regalo</h2>
+  <p>Daniel quería decirte que eres demasiado importante para él ❤️</p>
+</div>
+
+<script>
+let paso = 0;
+let intentosNo = 0;
+
+function horaActual() {
+  let d = new Date();
+  return d.getHours() + ":" + ("0" + d.getMinutes()).slice(-2);
+}
+
+function iniciar() {
+  document.getElementById("inicio").style.display = "none";
+  document.getElementById("chatContainer").style.display = "flex";
+
+  setTimeout(() => mensajeBot("Hola..."), 1000);
+}
+
+function mensajeBot(texto) {
+  typing(true);
+
+  setTimeout(() => {
+    typing(false);
+
+    let msg = document.createElement("div");
+    msg.className = "mensaje recibido";
+    msg.innerHTML = texto + `<div class="hora">${horaActual()}</div>`;
+    document.getElementById("chat").appendChild(msg);
+    scroll();
+  }, 1200);
+}
+
+function mensajeUsuario(texto) {
+  let msg = document.createElement("div");
+  msg.className = "mensaje enviado";
+  msg.innerHTML = texto + `<div class="hora">${horaActual()} <span class="check">✔✔</span></div>`;
+  document.getElementById("chat").appendChild(msg);
+  scroll();
+}
+
+function typing(estado) {
+  document.getElementById("typing").innerText = estado ? "escribiendo..." : "";
+}
+
+function scroll() {
+  let chat = document.getElementById("chat");
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function enviarMensaje() {
+  let input = document.getElementById("inputMensaje");
+  let texto = input.value.toLowerCase().trim();
+
+  if (texto === "") return;
+
+  mensajeUsuario(input.value);
+  input.value = "";
+
+  setTimeout(() => responder(texto), 800);
+}
+
+function responder(texto) {
+
+  if (paso === 0) {
+    mensajeBot("Hola 😊");
+    mensajeBot("Soy un bot 🤖");
+    mensajeBot("Y vengo de parte de Daniel ❤️");
+    mensajeBot("Él quiere darte un detalle...");
+    mensajeBot("¿Quieres verlo?");
+    paso = 1;
+    return;
+  }
+
+  if (paso === 1) {
+
+    if (texto.includes("si") || texto.includes("sí")) {
+      mensajeBot("Sabía que dirías que sí 😏");
+      mensajeBot("Prepárate...");
+      setTimeout(mostrarRegalo, 2000);
+      paso = 2;
+      return;
+    }
+
+    if (texto.includes("no")) {
+      intentosNo++;
+
+      if (intentosNo === 1) {
+        mensajeBot("😢 dale una oportunidad...");
+      } else if (intentosNo === 2) {
+        mensajeBot("porfa 🥺 es importante...");
+      } else {
+        mensajeBot("yaaa 😭 solo di que sí jajaja");
+      }
+
+      return;
+    }
+
+    mensajeBot("responde con 'sí' o 'no' 😜");
+  }
+}
+
+function mostrarRegalo() {
+  document.getElementById("chatContainer").style.display = "none";
+  document.getElementById("carta").style.display = "block";
+}
+</script>
+
+</body>
+</html>
