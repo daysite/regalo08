@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat especial ❤️</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0b141a;
+  display: flex;
+  justify-content: center;
+}
+
+/* APP */
+#app {
+  width: 100%;
+  max-width: 500px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #0b141a;
+}
+
+/* INICIO */
+#inicio {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: white;
+}
+
+button {
+  padding: 10px 18px;
+  border-radius: 20px;
+  border: none;
+  background: #25d366;
+  color: white;
+}
+
+/* HEADER */
+#header {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  background: #202c33;
+  color: white;
+}
+
+#header img {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+/* CHAT */
+#chatContainer {
+  display: none;
+  height: 100%;
+  flex-direction: column;
+}
+
+#chat {
+  flex: 1;
+  padding: 8px;
+  overflow-y: auto;
+}
+
+/* MENSAJES */
+.mensaje {
+  max-width: 80%;
+  padding: 8px;
+  margin: 4px;
+  border-radius: 10px;
+  font-size: 13px;
+  color: white;
+  animation: aparecer 0.2s ease;
+}
+
+@keyframes aparecer {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.enviado {
+  background: #005c4b;
+  margin-left: auto;
+}
+
+.recibido {
+  background: #202c33;
+}
+
+/* HORA */
+.hora {
+  font-size: 9px;
+  color: #aaa;
+  text-align: right;
+}
+
+/* CHECKS */
+.check {
+  font-size: 9px;
+  margin-left: 4px;
+  color: gray;
+}
+
+.check.azul {
+  color: #53bdeb;
+}
+
+/* INPUT */
+#inputArea {
+  display: flex;
+  padding: 8px;
+  background: #202c33;
+}
+
+#inputMensaje {
+  flex: 1;
+  padding: 8px;
+  border-radius: 18px;
+  border: none;
+  background: #2a3942;
+  color: white;
+  font-size: 13px;
+}
+
+/* BOTON */
+#inputArea button {
+  margin-left: 6px;
+  padding: 8px 12px;
+  border-radius: 50%;
+}
+
+/* ESCRIBIENDO */
+#typing {
+  font-size: 11px;
+  color: #aaa;
+  padding-left: 10px;
+}
+
+/* CARTA */
+#carta {
+  display: none;
+  text-align: center;
+  padding: 30px;
+  color: white;
+}
+
+/* 📱 MOVIL */
+@media (max-width: 600px) {
+  .mensaje {
+    font-size: 12px;
+    padding: 7px;
+  }
+
+  #header img {
+    width: 32px;
+    height: 32px;
+  }
+
+  #inputMensaje {
+    font-size: 12px;
+  }
+}
+
+/* 💻 PC */
+@media (min-width: 601px) {
+  #app {
+    margin-top: 20px;
+    height: 90vh;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 0 25px rgba(0,0,0,0.6);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div id="app">
+
+<div id="inicio">
+  <h2>Tengo algo para ti ❤️</h2>
+  <button onclick="iniciar()">Entrar</button>
+</div>
+
+<div id="chatContainer">
+
+  <div id="header">
+    <img src="perfil.jpeg">
+    <div>
+      <strong>Bot de Daniel ❤️</strong><br>
+      <small>en línea</small>
+    </div>
+  </div>
+
+  <div id="chat"></div>
+  <div id="typing"></div>
+
+  <div id="inputArea">
+    <input type="text" id="inputMensaje" placeholder="Escribe un mensaje...">
+    <button onclick="enviarMensaje()">➤</button>
+  </div>
+</div>
+
+<div id="carta">
+  <h2>🎁 Tu regalo</h2>
+  <p>Daniel quería decirte que eres muy importante para él ❤️</p>
+</div>
+
+</div>
+
+<script>
+let paso = 0;
+let intentosNo = 0;
+
+function hora() {
+  let d = new Date();
+  return d.getHours() + ":" + ("0" + d.getMinutes()).slice(-2);
+}
+
+function iniciar() {
+  document.getElementById("inicio").style.display = "none";
+  document.getElementById("chatContainer").style.display = "flex";
+  setTimeout(() => bot("Hola..."), 800);
+}
+
+function bot(texto) {
+  typing(true);
+
+  setTimeout(() => {
+    typing(false);
+
+    let msg = document.createElement("div");
+    msg.className = "mensaje recibido";
+    msg.innerHTML = texto + `<div class="hora">${hora()}</div>`;
+    document.getElementById("chat").appendChild(msg);
+    scroll();
+  }, 900);
+}
+
+function user(texto) {
+  let msg = document.createElement("div");
+  msg.className = "mensaje enviado";
+  msg.innerHTML = texto + `<div class="hora">${hora()} <span class="check">✔</span></div>`;
+  document.getElementById("chat").appendChild(msg);
+  scroll();
+
+  setTimeout(() => {
+    msg.querySelector(".check").innerText = "✔✔";
+  }, 600);
+
+  setTimeout(() => {
+    msg.querySelector(".check").classList.add("azul");
+  }, 1200);
+}
+
+function typing(estado) {
+  document.getElementById("typing").innerText = estado ? "escribiendo..." : "";
+}
+
+function scroll() {
+  let chat = document.getElementById("chat");
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function enviarMensaje() {
+  let input = document.getElementById("inputMensaje");
+  let texto = input.value.toLowerCase().trim();
+
+  if (!texto) return;
+
+  user(input.value);
+  input.value = "";
+
+  setTimeout(() => responder(texto), 800);
+}
+
+function responder(texto) {
+
+  if (paso === 0) {
+    bot("Hola 😊");
+    bot("Soy un bot 🤖");
+    bot("Y vengo de parte de Daniel ❤️");
+    bot("Tiene algo especial para ti...");
+    bot("¿Quieres verlo?");
+    paso = 1;
+    return;
+  }
+
+  if (paso === 1) {
+
+    if (texto.includes("si") || texto.includes("sí")) {
+      bot("Sabía que dirías que sí 😏");
+      bot("Prepárate...");
+      setTimeout(() => {
+        document.getElementById("chatContainer").style.display = "none";
+        document.getElementById("carta").style.display = "block";
+      }, 1500);
+      return;
+    }
+
+    if (texto.includes("no")) {
+      intentosNo++;
+
+      if (intentosNo === 1) bot("😢 dale una oportunidad...");
+      else if (intentosNo === 2) bot("porfa 🥺...");
+      else bot("yaaa 😭 solo di que sí jajaja");
+
+      return;
+    }
+
+    bot("responde con 'sí' o 'no' 😜");
+  }
+}
+</script>
+
+</body>
+</html>
