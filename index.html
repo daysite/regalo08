@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat especial ❤️</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #ffd6e7, #ffeef5);
+}
+
+/* LOGIN */
+#login {
+  height: calc(var(--vh) * 100);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-box {
+  width: 300px;
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.login-box img {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  width: 70px;
+}
+
+.login-box h3 { color: #ff4d88; }
+
+.login-box input {
+  width: 90%;
+  padding: 8px;
+  margin-top: 8px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+.login-box button {
+  margin-top: 10px;
+  padding: 8px 15px;
+  border-radius: 20px;
+  border: none;
+  background: #ff4d88;
+  color: white;
+}
+
+/* MAGIA */
+#magia {
+  display: none;
+  position: fixed;
+  inset: 0;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #ffb6d9, #ffd6e7);
+  color: white;
+  font-size: 20px;
+  text-align: center;
+  padding: 20px;
+}
+
+/* APP */
+#app {
+  width: 100%;
+  height: calc(var(--vh) * 100);
+  display: none;
+  flex-direction: column;
+  background: #0b141a;
+}
+
+/* HEADER */
+#header {
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  background: #202c33;
+  color: white;
+}
+
+#header img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+/* CHAT */
+#chatContainer {
+  display: none;
+  flex: 1;
+  flex-direction: column;
+}
+
+#chat {
+  flex: 1;
+  padding: 6px;
+  overflow-y: auto;
+}
+
+/* MENSAJES */
+.mensaje {
+  max-width: 75%;
+  padding: 6px 8px;
+  margin: 3px;
+  border-radius: 8px;
+  font-size: 12px;
+  color: white;
+}
+
+.enviado { background: #005c4b; margin-left: auto; }
+.recibido { background: #202c33; }
+
+/* INPUT */
+#inputArea {
+  display: flex;
+  padding: 6px;
+  background: #202c33;
+  position: sticky;
+  bottom: 0;
+}
+
+#inputMensaje {
+  flex: 1;
+  padding: 6px;
+  border-radius: 15px;
+  border: none;
+  background: #2a3942;
+  color: white;
+}
+
+#inputArea button {
+  margin-left: 5px;
+  padding: 6px 10px;
+  border-radius: 50%;
+}
+
+/* CARTA */
+#carta {
+  display: none;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  background: #0b141a;
+  color: white;
+  padding: 20px;
+}
+
+#contenidoCarta {
+  max-width: 300px;
+  text-align: center;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="login-box">
+    <img src="https://i.imgur.com/3QZQZ6P.png">
+    <h3>Hola Nayeli 💖</h3>
+    <p>Este regalo fue hecho con mucho cariño ✨</p>
+    <p><strong>¿Cuál es tu nombre?</strong></p>
+    <input type="text" id="clave">
+    <button onclick="verificar()">Entrar</button>
+    <p id="error" style="color:red; display:none;">❌ Incorrecto</p>
+    <div id="pistaBox" style="display:none;">
+      <button onclick="mostrarPista()">Ver pista</button>
+    </div>
+    <p id="pista"></p>
+  </div>
+</div>
+
+<!-- MAGIA -->
+<div id="magia">
+  <div id="textoMagico"></div>
+</div>
+
+<!-- APP -->
+<div id="app">
+
+<div id="chatContainer">
+  <div id="header">
+    <img src="perfil.jpeg">
+    <div>
+      <strong>Bot de Daniel ❤️</strong><br>
+      <small>en línea</small>
+    </div>
+  </div>
+
+  <div id="chat"></div>
+
+  <div id="inputArea">
+    <input type="text" id="inputMensaje">
+    <button onclick="enviarMensaje()">➤</button>
+  </div>
+</div>
+
+<div id="carta">
+  <div id="contenidoCarta">
+    <h2>🎁 Feliz cumpleaños Nayeli ❤️</h2>
+    <img src="foto.jpeg" style="width:250px;border-radius:15px;margin:15px 0;">
+    <p id="textoCarta"></p>
+  </div>
+</div>
+
+</div>
+
+<script>
+let paso=0,intentosNo=0,seguridad=0;
+
+/* FIX LOGIN */
+function ajustarAltura(){
+ let vh=window.innerHeight*0.01;
+ document.documentElement.style.setProperty('--vh',`${vh}px`);
+}
+window.addEventListener('load',ajustarAltura);
+window.addEventListener('resize',ajustarAltura);
+
+/* LOGIN */
+function verificar(){
+ let clave=document.getElementById("clave").value.toLowerCase();
+ if(clave==="nayeli juanita"){
+  document.getElementById("login").style.display="none";
+  document.getElementById("magia").style.display="flex";
+  iniciarMagia();
+ }else{
+  document.getElementById("error").style.display="block";
+  document.getElementById("pistaBox").style.display="block";
+ }
+}
+function mostrarPista(){
+ document.getElementById("pista").innerText="💡 nombre que Emerson siempre usa";
+}
+
+/* MAGIA */
+function iniciarMagia(){
+ const texto="Hola Nayeli 💖 este regalo fue hecho especialmente para ti";
+ let i=0;
+ let intervalo=setInterval(()=>{
+  document.getElementById("textoMagico").innerHTML+=texto[i];
+  i++;
+  if(i>=texto.length){
+   clearInterval(intervalo);
+   setTimeout(()=>{
+    document.getElementById("magia").style.display="none";
+    document.getElementById("app").style.display="flex";
+    document.getElementById("chatContainer").style.display="flex";
+    setTimeout(()=>bot("Hola Nayeli ❤️"),600);
+   },1500);
+  }
+ },40);
+}
+
+/* CHAT */
+function bot(t){
+ let m=document.createElement("div");
+ m.className="mensaje recibido";
+ m.innerHTML=t;
+ chat.appendChild(m);
+ scroll();
+}
+function user(t){
+ let m=document.createElement("div");
+ m.className="mensaje enviado";
+ m.innerHTML=t;
+ chat.appendChild(m);
+ scroll();
+}
+function scroll(){chat.scrollTop=chat.scrollHeight;}
+
+function enviarMensaje(){
+ let i=document.getElementById("inputMensaje");
+ let t=i.value.toLowerCase().trim();
+ if(!t)return;
+ user(i.value); i.value="";
+ setTimeout(()=>responder(t),600);
+}
+
+/* RESPUESTAS */
+function responder(t){
+
+if(paso===0){
+ if(t.includes("hola")){
+  bot("Hola 😊");
+  bot("¿Cómo estás Nayeli?");
+  bot("Me comentaron que hoy es tu cumpleaños 🎂");
+  bot("¿Es correcto?");
+  paso=1;
+ }else bot("di hola primero 😜");
+ return;
+}
+
+if(paso===1){
+ if(t.includes("si")){
+  bot("Ya lo sabía 😏");
+  bot("Por eso vengo a entregarte esta sorpresa 🎁");
+  bot("¿Quieres verla?");
+  paso=2;
+ }else bot("😅 creo que sí es...");
+ return;
+}
+
+if(paso===2){
+
+ if(seguridad===0 && t.includes("si")){
+  bot("Antes de mostrártelo 😏...");
+  bot("¿Dónde fue el primer lugar donde nos vimos?");
+  seguridad=1; return;
+ }
+
+ if(seguridad===1){
+  if(t.includes("lurin")){
+   bot("Muy bien 😍");
+   bot("¿Quién dio el primer beso?");
+   seguridad=2;
+  }else bot("intenta otra vez...");
+  return;
+ }
+
+ if(seguridad===2){
+  if(t.includes("emerson")){
+   bot("Sabía que lo recordarías ❤️");
+   setTimeout(()=>mostrarCarta(),1200);
+  }else bot("piénsalo bien...");
+  return;
+ }
+
+ if(t.includes("no")){
+  intentosNo++;
+  bot(intentosNo<2?"😢 oye...":"yaaa 😭 di que sí");
+  return;
+ }
+
+ bot("responde 'sí'");
+}
+}
+
+/* CARTA */
+function mostrarCarta(){
+ document.getElementById("chatContainer").style.display="none";
+ document.getElementById("carta").style.display="flex";
+
+ const texto="Hoy no es un día cualquiera... es el día en el que llegó al mundo una persona demasiado especial 💖. Este detalle representa lo mucho que significas para mí... cada momento contigo, cada recuerdo... todo eso lo guardo como algo muy valioso. Y aunque este regalo es pequeño, está lleno de intención, cariño y sentimientos reales. Te debo algo mejor... y prometo que muy pronto te lo daré ❤️";
+
+ let i=0;
+ function escribir(){
+  if(i<texto.length){
+   document.getElementById("textoCarta").innerHTML+=texto[i];
+   i++;
+   setTimeout(escribir,30);
+  }
+ }
+ escribir();
+}
+</script>
+
+</body>
+</html>
