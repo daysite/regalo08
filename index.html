@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat especial ❤️</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #ffd6e7, #ffeef5);
+}
+
+/* LOGIN */
+#login {
+  height: calc(var(--vh) * 100);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-box {
+  width: 300px;
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.login-box img {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  width: 70px;
+}
+
+.login-box h3 {
+  color: #ff4d88;
+}
+
+.login-box input {
+  width: 90%;
+  padding: 8px;
+  margin-top: 8px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+.login-box button {
+  margin-top: 10px;
+  padding: 8px 15px;
+  border-radius: 20px;
+  border: none;
+  background: #ff4d88;
+  color: white;
+}
+
+/* APP */
+#app {
+  width: 100%;
+  height: calc(var(--vh) * 100);
+  display: none;
+  flex-direction: column;
+  background: #0b141a;
+}
+
+/* INICIO */
+#inicio {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: white;
+}
+
+button {
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: none;
+  background: #25d366;
+  color: white;
+}
+
+/* HEADER */
+#header {
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  background: #202c33;
+  color: white;
+}
+
+#header img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+/* CHAT */
+#chatContainer {
+  display: none;
+  flex: 1;
+  flex-direction: column;
+}
+
+#chat {
+  flex: 1;
+  padding: 6px;
+  overflow-y: auto;
+}
+
+/* MENSAJES */
+.mensaje {
+  max-width: 75%;
+  padding: 6px 8px;
+  margin: 3px;
+  border-radius: 8px;
+  font-size: 12px;
+  color: white;
+}
+
+.enviado {
+  background: #005c4b;
+  margin-left: auto;
+}
+
+.recibido {
+  background: #202c33;
+}
+
+/* INPUT */
+#inputArea {
+  display: flex;
+  padding: 6px;
+  background: #202c33;
+  position: sticky;
+  bottom: 0;
+}
+
+#inputMensaje {
+  flex: 1;
+  padding: 6px;
+  border-radius: 15px;
+  border: none;
+  background: #2a3942;
+  color: white;
+}
+
+#inputArea button {
+  margin-left: 5px;
+  padding: 6px 10px;
+  border-radius: 50%;
+}
+
+/* CARTA */
+#carta {
+  display: none;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="login-box">
+
+    <img src="https://i.imgur.com/3QZQZ6P.png">
+
+    <h3>Hola Nayeli 💖</h3>
+    <p>Este regalo fue hecho con mucho cariño ✨</p>
+
+    <p><strong>¿Cuál es tu nombre?</strong></p>
+    <input type="text" id="clave" placeholder="Escribe aquí...">
+
+    <button onclick="verificar()">Entrar</button>
+
+    <p id="error" style="color:red; display:none;">❌ Incorrecto</p>
+
+    <div id="pistaBox" style="display:none; margin-top:10px;">
+      <p>¿Quieres una pequeña pista?</p>
+      <button onclick="mostrarPista()">Ver</button>
+    </div>
+
+    <p id="pista" style="color:#ff4d88;"></p>
+
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+
+<div id="inicio">
+  <h3>Tengo algo para ti ❤️</h3>
+  <button onclick="iniciar()">Entrar</button>
+</div>
+
+<div id="chatContainer">
+
+  <div id="header">
+    <img src="perfil.jpeg">
+    <div>
+      <strong>Bot de Daniel ❤️</strong><br>
+      <small>en línea</small>
+    </div>
+  </div>
+
+  <div id="chat"></div>
+
+  <div id="inputArea">
+    <input type="text" id="inputMensaje" placeholder="Mensaje...">
+    <button onclick="enviarMensaje()">➤</button>
+  </div>
+</div>
+
+<div id="carta">
+  <div>
+    <h2>🎁 Feliz cumpleaños Nayeli ❤️</h2>
+    <p>Este detalle es para recordarte lo especial que eres ✨</p>
+  </div>
+</div>
+
+</div>
+
+<script>
+let paso = 0;
+let intentosNo = 0;
+
+/* LOGIN */
+function verificar() {
+  let clave = document.getElementById("clave").value.toLowerCase();
+
+  if (clave === "nayeli juanita") {
+    document.getElementById("login").style.display = "none";
+    document.getElementById("app").style.display = "flex";
+  } else {
+    document.getElementById("error").style.display = "block";
+    document.getElementById("pistaBox").style.display = "block";
+  }
+}
+
+function mostrarPista() {
+  document.getElementById("pista").innerText =
+    "💡 Pista: es un nombre que Emerson siempre te ha puesto";
+}
+
+/* ALTURA */
+function ajustarAltura() {
+  const vh = window.visualViewport
+    ? window.visualViewport.height * 0.01
+    : window.innerHeight * 0.01;
+
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+
+window.addEventListener('load', ajustarAltura);
+window.addEventListener('resize', ajustarAltura);
+
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', ajustarAltura);
+}
+
+/* ENTER */
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("inputMensaje").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") {
+      enviarMensaje();
+    }
+  });
+});
+
+/* CHAT */
+function iniciar() {
+  document.getElementById("inicio").style.display = "none";
+  document.getElementById("chatContainer").style.display = "flex";
+
+  setTimeout(() => bot("Hola Nayeli ❤️"), 600);
+}
+
+function bot(texto) {
+  let msg = document.createElement("div");
+  msg.className = "mensaje recibido";
+  msg.innerHTML = texto;
+  document.getElementById("chat").appendChild(msg);
+  scroll();
+}
+
+function user(texto) {
+  let msg = document.createElement("div");
+  msg.className = "mensaje enviado";
+  msg.innerHTML = texto;
+  document.getElementById("chat").appendChild(msg);
+  scroll();
+}
+
+function scroll() {
+  let chat = document.getElementById("chat");
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function enviarMensaje() {
+  let input = document.getElementById("inputMensaje");
+  let texto = input.value.toLowerCase().trim();
+
+  if (!texto) return;
+
+  user(input.value);
+  input.value = "";
+
+  setTimeout(() => responder(texto), 600);
+}
+
+function responder(texto) {
+
+  if (paso === 0) {
+    if (texto.includes("hola")) {
+      bot("Hola 😊");
+      bot("¿Cómo estás Nayeli?");
+      bot("Me comentaron que hoy es tu cumpleaños 🎂");
+      bot("¿Es correcto?");
+      paso = 1;
+    } else {
+      bot("di hola primero 😜");
+    }
+    return;
+  }
+
+  if (paso === 1) {
+    if (texto.includes("si") || texto.includes("sí")) {
+      bot("Ya lo sabía 😏");
+      bot("Por eso vengo a entregarte esta sorpresa 🎁");
+      bot("¿Quieres verla?");
+      paso = 2;
+      return;
+    }
+    bot("😅 creo que sí es...");
+  }
+
+  if (paso === 2) {
+    if (texto.includes("si") || texto.includes("sí")) {
+      bot("Sabía que dirías que sí 😌");
+
+      setTimeout(() => {
+        document.getElementById("chatContainer").style.display = "none";
+        document.getElementById("carta").style.display = "flex";
+      }, 1200);
+
+      return;
+    }
+
+    if (texto.includes("no")) {
+      intentosNo++;
+      if (intentosNo === 1) bot("😢 oye en serio...");
+      else if (intentosNo === 2) bot("porfa Nayeli 🥺...");
+      else bot("yaaa 😭 solo di que sí jajaja");
+      return;
+    }
+
+    bot("responde 'sí' 😜");
+  }
+}
+</script>
+
+</body>
+</html>
